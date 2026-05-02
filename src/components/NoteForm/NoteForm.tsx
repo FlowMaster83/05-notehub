@@ -6,7 +6,7 @@ export default function NoteForm() {
             <div className={css.formGroup}>
                 <label htmlFor="title">Title</label>
                 <input id="title" type="text" name="title" className={css.input} />
-                <span name="title" className={css.error} />
+                <span data-name="title" className={css.error} />
             </div>
 
             <div className={css.formGroup}>
@@ -17,7 +17,7 @@ export default function NoteForm() {
                     rows={8}
                     className={css.textarea}
                 />
-                <span name="content" className={css.error} />
+                <span data-name="content" className={css.error} />
             </div>
 
             <div className={css.formGroup}>
@@ -29,7 +29,7 @@ export default function NoteForm() {
                     <option value="Meeting">Meeting</option>
                     <option value="Shopping">Shopping</option>
                 </select>
-                <span name="tag" className={css.error} />
+                <span data-name="tag" className={css.error} />
             </div>
 
             <div className={css.actions}>
@@ -39,12 +39,12 @@ export default function NoteForm() {
                 <button
                     type="submit"
                     className={css.submitButton}
-                    disabled=false
+                    disabled
+                //= false
                 >
                     Create note
                 </button>
             </div>
         </form>
-
     )
 };
