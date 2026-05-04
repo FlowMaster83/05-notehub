@@ -1,5 +1,6 @@
 // import NoteForm from '../NoteForm/NoteForm';
 import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 
 import NoteList from '../NoteList/NoteList';
 import SearchBox from '../SearchBox/SearchBox';
@@ -10,10 +11,17 @@ import css from './App.module.css';
 
 function App() {
 
+  const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    console.log(`Make HTTP request with: ${filter}`);
+  }, [filter])
+
   const { data, error, isLoading, isError, isSuccess } = useQuery(
     {
-      queryKey: ['notes'],
-      queryFn: () => fetchNotes(''),
+      queryKey: ['notes', filter],
+      queryFn: () => fetchNotes(filter),
+      refetchOnWindowFocus: false
     }
   )
 
@@ -23,7 +31,7 @@ function App() {
         <header className={css.toolbar}>
           {/* Пагінація */}
 
-          <SearchBox />
+          <SearchBox onSearch={setFilter} />
           {/* <NoteForm /> */}
 
           <button className={css.button}>Create note +</button>

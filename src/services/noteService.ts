@@ -6,8 +6,11 @@ export interface notes {
     totalPages: number
 }
 
-export const fetchNotes = async () => {
+export const fetchNotes = async (search: string) => {
     const config = {
+    params: {
+        search
+    },
     headers: {
         Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`
     }
