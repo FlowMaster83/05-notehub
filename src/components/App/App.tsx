@@ -1,10 +1,11 @@
-// import NoteForm from '../NoteForm/NoteForm';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { fetchNotes } from '../../services/noteService';
 import { createNote } from '../../services/noteService';
+import { deleteNote } from '../../services/noteService';
 
 import type { NoteFormValues } from '../NoteForm/NoteForm'
 
@@ -17,6 +18,8 @@ import css from './App.module.css';
 
 function App() {
 
+  const queryClient = useQueryClient();
+
   const [filter, setFilter] = useState('')
   const [isOpenCreateNote, setIsOpenCreateNote] = useState(false)
 
@@ -28,18 +31,34 @@ function App() {
     }
   )
 
-  const mutation = useMutation({
+  const creation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
-      console.log('Success');
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      console.log('New note created');
     },
     onError: (error) => {
-      console.log(error);
+      console.log('Creation error: ', error);
     }
   })
 
   const handleCreateNote = (values: NoteFormValues) => {
-    mutation.mutate(values)
+    creation.mutate(values)
+  }
+
+  const deletion = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      console.log('Note deleted');
+    },
+    onError: (error) => {
+      console.log('Deletion error: ', error);
+    }
+  })
+
+  const handleDeleteNote = (id: string) => {
+    deletion.mutate(id)
   }
 
   const notes = data?.notes || [];
@@ -61,7 +80,7 @@ function App() {
         {isLoading && <p>Loading...</p>}
         {isError && <p>Error: {error.message}</p>}
 
-        {isSuccess && <NoteList notes={notes} />}
+        {isSuccess && <NoteList onClick={handleDeleteNote} notes={notes} />}
 
         {isOpenCreateNote && <Modal onClose={closeModal}>
           <NoteForm onClose={closeModal} onSubmit={handleCreateNote} />

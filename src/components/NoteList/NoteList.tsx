@@ -2,10 +2,12 @@ import css from './NoteList.module.css'
 import type { Note } from '../../types/note'
 
 export interface NoteListProps {
+    onClick: (note: string) => void
     notes: Note[],
 }
 
-export default function NoteList({ notes }: NoteListProps) {
+export default function NoteList({ notes, onClick }: NoteListProps) {
+
     return (
         <ul className={css.list}>
 
@@ -14,7 +16,7 @@ export default function NoteList({ notes }: NoteListProps) {
                 <p className={css.content}>{note.content}</p>
                 <div className={css.footer}>
                     <span className={css.tag}>{note.tag}</span>
-                    <button className={css.button}>Delete</button>
+                    <button onClick={() => onClick(note.id)} className={css.button}>Delete</button>
                 </div>
             </li>)}
         </ul>
