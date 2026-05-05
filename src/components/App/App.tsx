@@ -16,7 +16,7 @@ function App() {
   const [filter, setFilter] = useState('')
   const [isOpenCreateNote, setIsOpenCreateNote] = useState(false)
 
-  const { data, isLoading, isError, isSuccess } = useQuery(
+  const { data, error, isLoading, isError, isSuccess } = useQuery(
     {
       queryKey: ['notes', filter],
       queryFn: () => fetchNotes(filter),
@@ -24,9 +24,11 @@ function App() {
     }
   )
 
+  const notes = data?.notes || [];
+  // const totalPages = data?.totalPages || 0;
+
   const openModal = () => setIsOpenCreateNote(true);
   const closeModal = () => setIsOpenCreateNote(false);
-
 
   return (
     <>
@@ -40,9 +42,9 @@ function App() {
           <button onClick={openModal} className={css.button}>Create note +</button>
         </header>
         {isLoading && <p>Loading...</p>}
-        {isError && <p>Error</p>}
+        {isError && <p>Error: {error.message}</p>}
 
-        {isSuccess && <NoteList notes={data} />}
+        {isSuccess && <NoteList notes={notes} />}
 
         {isOpenCreateNote && <Modal onClose={closeModal}>
           <NoteForm onClose={closeModal} />

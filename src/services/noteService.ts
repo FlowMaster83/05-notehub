@@ -1,12 +1,12 @@
 import type { Note } from "../types/note"
 import axios from "axios"
 
-export interface notes {
+export interface FetchNotesResponse {
     notes: Note[],
     totalPages: number
 }
 
-export const fetchNotes = async (search: string) => {
+export const fetchNotes = async (search: string): Promise<FetchNotesResponse> => {
     const config = {
     params: {
         search
@@ -16,7 +16,7 @@ export const fetchNotes = async (search: string) => {
     }
 }
 
-    const response = await axios.get('https://notehub-public.goit.study/api/notes', config)
+    const response = await axios.get<FetchNotesResponse>('https://notehub-public.goit.study/api/notes', config)
 
-    return response.data.notes
+    return response.data
 }

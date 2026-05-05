@@ -1,5 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import type { FormikHelpers } from 'formik'
+import type { NoteTag } from '../../types/note'
 import * as Yup from 'yup'
 import css from './NoteForm.module.css'
 
@@ -10,7 +11,7 @@ interface NoteFormProps {
 interface NoteFormValues {
     title: string,
     content: string,
-    tag: string,
+    tag: NoteTag,
 }
 
 const initialValues: NoteFormValues = {
