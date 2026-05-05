@@ -1,15 +1,19 @@
 // import NoteForm from '../NoteForm/NoteForm';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-
-import NoteList from '../NoteList/NoteList';
-import SearchBox from '../SearchBox/SearchBox';
-import Modal from '../Modal/Modal';
+import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { fetchNotes } from '../../services/noteService';
+import { createNote } from '../../services/noteService';
+
+import type { NoteFormValues } from '../NoteForm/NoteForm'
+
+import SearchBox from '../SearchBox/SearchBox';
+import Modal from '../Modal/Modal';
+import NoteForm from '../NoteForm/NoteForm';
+import NoteList from '../NoteList/NoteList';
 
 import css from './App.module.css';
-import NoteForm from '../NoteForm/NoteForm';
 
 function App() {
 
@@ -20,9 +24,23 @@ function App() {
     {
       queryKey: ['notes', filter],
       queryFn: () => fetchNotes(filter),
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false // temp
     }
   )
+
+  const mutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      console.log('Success');
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  })
+
+  const handleCreateNote = (values: NoteFormValues) => {
+    mutation.mutate(values)
+  }
 
   const notes = data?.notes || [];
   // const totalPages = data?.totalPages || 0;
@@ -37,7 +55,6 @@ function App() {
           {/* Пагінація */}
 
           <SearchBox onSearch={setFilter} />
-          {/* <NoteForm /> */}
 
           <button onClick={openModal} className={css.button}>Create note +</button>
         </header>
@@ -47,7 +64,7 @@ function App() {
         {isSuccess && <NoteList notes={notes} />}
 
         {isOpenCreateNote && <Modal onClose={closeModal}>
-          <NoteForm onClose={closeModal} />
+          <NoteForm onClose={closeModal} onSubmit={handleCreateNote} />
         </Modal>}
       </div>
 

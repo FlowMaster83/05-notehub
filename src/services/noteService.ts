@@ -6,17 +6,29 @@ export interface FetchNotesResponse {
     totalPages: number
 }
 
-export const fetchNotes = async (search: string): Promise<FetchNotesResponse> => {
-    const config = {
-    params: {
-        search
-    },
+const api = axios.create({
+    baseURL: 'https://notehub-public.goit.study/api',
     headers: {
         Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`
     }
+})
+
+// get
+export const fetchNotes = async (search: string): Promise<FetchNotesResponse> => {
+    const response = await api.get<FetchNotesResponse>('/notes', {
+        params: {search}
+    });
+    return response.data
+};
+
+// post
+export const createNote = async (newNoteData: {title: string, content: string, tag: string}): Promise<Note> => {
+    const response = await api.post<Note>('/notes', newNoteData);
+    return response.data
 }
 
-    const response = await axios.get<FetchNotesResponse>('https://notehub-public.goit.study/api/notes', config)
-
+// delete
+export const deleteNote = async (id: string) => {
+    const response = await api.delete(`/notes/${id}`);
     return response.data
 }

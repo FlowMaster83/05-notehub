@@ -5,10 +5,11 @@ import * as Yup from 'yup'
 import css from './NoteForm.module.css'
 
 interface NoteFormProps {
-    onClose: () => void
+    onClose: () => void,
+    onSubmit: (values: NoteFormValues) => void
 }
 
-interface NoteFormValues {
+export interface NoteFormValues {
     title: string,
     content: string,
     tag: NoteTag,
@@ -32,14 +33,16 @@ const validationSchema = Yup.object().shape({
         .required('Tag should be one of the following values')
 })
 
-export default function NoteForm({ onClose }: NoteFormProps) {
+export default function NoteForm({ onClose, onSubmit }: NoteFormProps) {
 
     const handleSubmit = (
         values: NoteFormValues,
         actions: FormikHelpers<NoteFormValues>
     ) => {
+        onSubmit(values)
         console.log(values);
         actions.resetForm();
+        onClose()
     }
 
     return (
@@ -92,7 +95,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                     </button>
                 </div>
             </Form>
-
         </Formik>
     )
 };
