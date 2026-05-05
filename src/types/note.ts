@@ -8,29 +8,3 @@ export interface Note {
 }
 
 export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping'
-
-
-// List of notes:
-// {
-//   "notes": [
-//     {
-//       "id": "65ca67e7ae7f10c88b598384",
-//       "title": "Sample Note",
-//       "content": "This is a sample note content.",
-//       "createdAt": "2022-01-01T00:00:00Z",
-//       "updatedAt": "2022-01-01T00:00:00Z",
-//       "tag": "Todo"
-//     }
-//   ],
-//   "totalPages": 5
-// }
-
-// Note:
-/* {
-  "id": "65ca67e7ae7f10c88b598384",
-  "title": "Sample Note",
-  "content": "This is a sample note content.",
-  "createdAt": "2022-01-01T00:00:00Z",
-  "updatedAt": "2022-01-01T00:00:00Z",
-  "tag": "Todo"
-} */

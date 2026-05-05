@@ -9,6 +9,7 @@ import SearchBox from '../SearchBox/SearchBox';
 import Modal from '../Modal/Modal';
 import NoteForm from '../NoteForm/NoteForm';
 import NoteList from '../NoteList/NoteList';
+import Pagination from '../Pagination/Pagination';
 
 import css from './App.module.css';
 
@@ -16,14 +17,18 @@ function App() {
 
   const queryClient = useQueryClient();
 
+  const [page, setPage] = useState(1)
+  const perPage = 12;
+
   const [filter, setFilter] = useState('')
   const [isOpenCreateNote, setIsOpenCreateNote] = useState(false)
 
   const { data, error, isLoading, isError, isSuccess } = useQuery(
     {
-      queryKey: ['notes', filter],
-      queryFn: () => fetchNotes(filter),
-      refetchOnWindowFocus: false // temp
+      queryKey: ['notes', filter, page],
+      queryFn: () => fetchNotes(filter, page, perPage),
+      refetchOnWindowFocus: false, // temp
+      placeholderData: (prevData) => prevData,
     }
   )
 
@@ -58,25 +63,34 @@ function App() {
   }
 
   const notes = data?.notes || [];
-  // const totalPages = data?.totalPages || 0;
+  const totalPages = data?.totalPages || 0;
 
   const openModal = () => setIsOpenCreateNote(true);
   const closeModal = () => setIsOpenCreateNote(false);
+
+  const handleSearch = (newFilter: string) => {
+    setFilter(newFilter);
+    setPage(1);
+  }
 
   return (
     <>
       <div className={css.app}>
         <header className={css.toolbar}>
-          {/* Пагінація */}
 
-          <SearchBox onSearch={setFilter} />
+          <SearchBox onSearch={handleSearch} />
+
+          {isSuccess && totalPages > 1 && (
+            <Pagination totalPages={totalPages} currentPage={page} onPageChange={(nextPage) => setPage(nextPage)} />
+          )}
 
           <button onClick={openModal} className={css.button}>Create note +</button>
         </header>
         {isLoading && <p>Loading...</p>}
         {isError && <p>Error: {error.message}</p>}
 
-        {isSuccess && <NoteList onClick={handleDeleteNote} notes={notes} />}
+        {isSuccess && data.notes.length > 0 &&
+          <NoteList onClick={handleDeleteNote} notes={notes} />}
 
         {isOpenCreateNote && <Modal onClose={closeModal}>
           <NoteForm onClose={closeModal} onSubmit={handleCreateNote} />

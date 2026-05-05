@@ -3,7 +3,7 @@ import axios from "axios"
 
 export interface FetchNotesResponse {
     notes: Note[],
-    totalPages: number
+    totalPages: number,
 }
 
 const api = axios.create({
@@ -14,9 +14,13 @@ const api = axios.create({
 })
 
 // get
-export const fetchNotes = async (search: string): Promise<FetchNotesResponse> => {
+export const fetchNotes = async (
+    search: string = '', 
+    page: number = 1, 
+    perPage: number = 12
+): Promise<FetchNotesResponse> => {
     const response = await api.get<FetchNotesResponse>('/notes', {
-        params: {search}
+        params: {search, page, perPage}
     });
     return response.data
 };

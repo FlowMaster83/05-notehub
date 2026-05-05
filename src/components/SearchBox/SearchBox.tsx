@@ -1,4 +1,3 @@
-// import { useEffect, useState } from 'react'
 import css from './SearchBox.module.css'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -17,7 +16,6 @@ export default function SearchBox({ onSearch }: SearchBoxProps) {
         <input
             className={css.input}
             onChange={handleChange}
-
             type='text'
             placeholder="Search notes"
         />
