@@ -1,13 +1,9 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
-
-import { fetchNotes } from '../../services/noteService';
-import { createNote } from '../../services/noteService';
-import { deleteNote } from '../../services/noteService';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { NoteFormValues } from '../NoteForm/NoteForm'
+
+import { fetchNotes, createNote, deleteNote } from '../../services/noteService';
 
 import SearchBox from '../SearchBox/SearchBox';
 import Modal from '../Modal/Modal';
