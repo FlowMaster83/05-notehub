@@ -4,11 +4,10 @@ import type { Note } from '../../types/note'
 import css from './NoteList.module.css'
 
 export interface NoteListProps {
-    onClick: (note: string) => void
     notes: Note[],
 }
 
-export default function NoteList({ notes, onClick }: NoteListProps) {
+export default function NoteList({ notes }: NoteListProps) {
 
     const queryClient = useQueryClient();
 
