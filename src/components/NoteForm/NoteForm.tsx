@@ -37,11 +37,10 @@ const validationSchema = Yup.object().shape({
 export default function NoteForm({ onClose }: NoteFormProps) {
     const queryClient = useQueryClient();
 
-    const { mutate, isPending } = useMutation({
+        const { mutate, isPending } = useMutation({
         mutationFn: createNote,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
-            onClose();
         },
         onError: (error) => {
             console.error('Error', error);
@@ -52,8 +51,13 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         values: NoteFormValues,
         actions: FormikHelpers<NoteFormValues>
     ) => {
-        mutate(values);
-        actions.resetForm()
+
+        mutate(values, {
+            onSuccess: () => {
+                actions.resetForm();
+                onClose();
+            }
+        });
     }
 
     return (
@@ -103,7 +107,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                         disabled={isPending}
                     >
                         {isPending ? 'Creating...' : 'Create note'}
-                        Create note
                     </button>
                 </div>
             </Form>
