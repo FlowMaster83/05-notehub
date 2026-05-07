@@ -51,7 +51,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         values: NoteFormValues,
         actions: FormikHelpers<NoteFormValues>
     ) => {
-
         mutate(values, {
             onSuccess: () => {
                 actions.resetForm();
