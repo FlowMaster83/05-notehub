@@ -32,7 +32,7 @@ export const createNote = async (newNoteData: {title: string, content: string, t
 }
 
 // delete
-export const deleteNote = async (id: string) => {
-    const response = await api.delete(`/notes/${id}`);
+export const deleteNote = async (id: string):Promise<Note> => {
+    const response = await api.delete<Note>(`/notes/${id}`);
     return response.data
 }

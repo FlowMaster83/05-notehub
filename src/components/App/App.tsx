@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDebounce, useDebouncedCallback } from 'use-debounce'
 
 import type { NoteFormValues } from '../NoteForm/NoteForm'
 
@@ -21,12 +22,14 @@ function App() {
   const perPage = 12;
 
   const [filter, setFilter] = useState('')
+  const [debouncedFilter] = useDebounce(filter, 500)
+
   const [isOpenCreateNote, setIsOpenCreateNote] = useState(false)
 
   const { data, error, isLoading, isError, isSuccess } = useQuery(
     {
-      queryKey: ['notes', filter, page],
-      queryFn: () => fetchNotes(filter, page, perPage),
+      queryKey: ['notes', debouncedFilter, page],
+      queryFn: () => fetchNotes(debouncedFilter, page, perPage),
       refetchOnWindowFocus: false, // temp
       placeholderData: (prevData) => prevData,
     }
@@ -78,7 +81,7 @@ function App() {
       <div className={css.app}>
         <header className={css.toolbar}>
 
-          <SearchBox onSearch={handleSearch} />
+          <SearchBox value={filter} onSearch={handleSearch} />
 
           {isSuccess && totalPages > 1 && (
             <Pagination totalPages={totalPages} currentPage={page} onPageChange={(nextPage) => setPage(nextPage)} />
