@@ -2,11 +2,12 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import type { FormikHelpers } from 'formik'
 import type { NoteTag } from '../../types/note'
 import * as Yup from 'yup'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createNote } from '../../services/noteService'
 import css from './NoteForm.module.css'
 
 interface NoteFormProps {
     onClose: () => void,
-    onSubmit: (values: NoteFormValues) => void
 }
 
 export interface NoteFormValues {
@@ -33,16 +34,26 @@ const validationSchema = Yup.object().shape({
         .required('Tag should be one of the following values')
 })
 
-export default function NoteForm({ onClose, onSubmit }: NoteFormProps) {
+export default function NoteForm({ onClose }: NoteFormProps) {
+    const queryClient = useQueryClient();
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: createNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['notes'] })
+            onClose();
+        },
+        onError: (error) => {
+            console.error('Error', error);
+        }
+    })
 
     const handleSubmit = (
         values: NoteFormValues,
         actions: FormikHelpers<NoteFormValues>
     ) => {
-        onSubmit(values)
-        console.log(values);
-        actions.resetForm();
-        onClose()
+        mutate(values);
+        actions.resetForm()
     }
 
     return (
@@ -89,8 +100,9 @@ export default function NoteForm({ onClose, onSubmit }: NoteFormProps) {
                     <button
                         type="submit"
                         className={css.submitButton}
-                        disabled={false} // temp
+                        disabled={isPending}
                     >
+                        {isPending ? 'Creating...' : 'Create note'}
                         Create note
                     </button>
                 </div>
