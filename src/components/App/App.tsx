@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDebounce, useDebouncedCallback } from 'use-debounce'
+import { useDebounce } from 'use-debounce'
 
 import type { NoteFormValues } from '../NoteForm/NoteForm'
 
